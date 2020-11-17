@@ -32,7 +32,7 @@ def displayMessage() :
 
 def displayScore(score) :
     val = scoreFont.render("Your score : " + str(score), True, white)
-    gameDisplay.blit(val, [0,0])
+    gameDisplay.blit(val, [250,0])
 
 
 def displaySnake(body, list) :
@@ -126,4 +126,5 @@ def main() :
     pygame.quit()
     quit()
 
-main()
+if __name__ == '__main__':
+    main()
