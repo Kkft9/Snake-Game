@@ -49,6 +49,7 @@ def main() :
 
     xChange = 0
     yChange = 0
+    dir = 0
 
     snakeList = []
     snakeLength = 1
@@ -80,21 +81,32 @@ def main() :
                 if event.key == pygame.K_LEFT :
                     xChange = -snakeBody
                     yChange = 0
+                    dir = 3
 
                 elif event.key == pygame.K_RIGHT :
                     xChange = snakeBody
                     yChange = 0
+                    dir = 4
 
                 elif event.key == pygame.K_UP :
                     xChange = 0
                     yChange = -snakeBody
+                    dir = 1
 
                 elif event.key == pygame.K_DOWN :
                     xChange = 0
                     yChange = snakeBody
+                    dir = 2
 
-        if xCoordinate>=displayLength or xCoordinate<0 or yCoordinate>=displayWidth or yCoordinate<0 :
-            displayingMsg = True
+        if xCoordinate==0 and dir==3 :
+            xCoordinate = displayLength
+        if xCoordinate==displayLength and dir==4 :
+            xCoordinate = 0
+        if yCoordinate==0 and dir==1 :
+            yCoordinate = displayWidth
+        if yCoordinate==displayWidth and dir==2 :
+            yCoordinate = 0
+            
         xCoordinate += xChange
         yCoordinate += yChange
 
