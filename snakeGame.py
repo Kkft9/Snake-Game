@@ -1,6 +1,8 @@
 import pygame
 import time
 import random
+import sys
+import pickle
 
 pygame.init()
 
@@ -26,13 +28,31 @@ scoreFont = pygame.font.SysFont("comicsansms", 20)
 
 
 def displayMessage() :
-    msg = font.render("YOU LOST!!! Press 'P' to play again or 'Q' to quit.", True, white)
-    gameDisplay.blit(msg, [100, displayWidth/2])
+    msg = font.render("Press 'P' to play again", True, white)
+    gameDisplay.blit(msg, [200, displayWidth/2])
 
 
-def displayScore(score) :
-    val = scoreFont.render("Your score : " + str(score), True, white)
-    gameDisplay.blit(val, [250,0])
+def updateHighScore(score, update) :
+    try:
+        with open('score.dat', 'rb') as file:
+            highScore = pickle.load(file)
+    except:
+        highScore = 0
+
+    if update :
+        if score > highScore :
+            with open('score.dat', 'wb') as file:
+                pickle.dump(score, file)
+                return score
+
+    return highScore
+
+
+def displayScore(score, update) :
+    valScore = scoreFont.render("Your score : " + str(score), True, white)
+    gameDisplay.blit(valScore, [100,0])
+    valHighScore = scoreFont.render("High Score : " + str(updateHighScore(score, update)), True, white)
+    gameDisplay.blit(valHighScore, [300,0])
 
 
 def displaySnake(body, list) :
@@ -62,20 +82,21 @@ def main() :
         while displayingMsg :
             gameDisplay.fill(black)
             displayMessage()
-            displayScore(snakeLength-1)
+            displayScore(snakeLength-1, True)
             pygame.display.update()
 
             for event in pygame.event.get() :
                 if event.type == pygame.KEYDOWN :
-                    if event.key == pygame.K_q :
-                        playingGame = False
-                        displayingMsg = False
-                    elif event.key == pygame.K_p :
+                    if event.key == pygame.K_p :
                         main()
+                elif event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit(0)
         
         for event in pygame.event.get() :
             if event.type == pygame.QUIT :
-                playingGame = False
+                pygame.quit()
+                sys.exit(0)
 
             if event.type == pygame.KEYDOWN :
                 if event.key == pygame.K_LEFT :
@@ -124,7 +145,7 @@ def main() :
                 displayingMsg = True
         
         displaySnake(snakeBody, snakeList)
-        displayScore(snakeLength-1)
+        displayScore(snakeLength-1, False)
 
         pygame.display.update()
 
